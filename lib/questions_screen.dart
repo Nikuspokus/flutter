@@ -5,7 +5,9 @@ import 'package:flutter_basics/answer_button.dart';
 import 'package:flutter_basics/data/questions.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen({super.key, required this.onSelectAnswer});
+
+  final void Function(String answer) onSelectAnswer;
 
   @override
   State<QuestionsScreen> createState() {
@@ -16,7 +18,8 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   var currentQuestionIndex = 0;
 
-  answerQuestion() {
+  void answerQuestion(String selectedAnswers) {
+    widget.onSelectAnswer(selectedAnswers);
     setState(() {
       currentQuestionIndex++;
     });
@@ -27,7 +30,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     final currentQuestion = questions[currentQuestionIndex];
 
     return Container(
-      margin: const EdgeInsets.all(40),
+      margin: const EdgeInsets.all(20),
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -45,7 +48,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               ),
               const SizedBox(height: 20),
               ...currentQuestion.getShufflesAnswers().map((answer) {
-                return AnswerButton(answerText: answer, onTap: answerQuestion);
+                return AnswerButton(answerText: answer, onTap: () {
+                  answerQuestion(answer);
+                });
               }),
             ]),
       ),
